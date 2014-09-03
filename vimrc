@@ -17,6 +17,8 @@ Bundle 'Valloric/YouCompleteMe'
 "Bundle 'Syntastic'
 Bundle 'rking/ag.vim' 
 Bundle 'Raimondi/delimitMate'
+Bundle 'kien/ctrlp.vim'
+Bundle 'Lokaltog/vim-easymotion'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
@@ -71,7 +73,6 @@ set foldmethod=syntax
 set foldcolumn=4
 set foldlevel=999
 set nomousehide
-"set completeopt-=preview "do not dispaly preview
 
 set autochdir "auto change directory to the file dir
 set incsearch "dispaly search result when searching
@@ -138,6 +139,7 @@ if &diff
     noremap <F2> ]czz
     set foldcolumn=1
 else
+    noremap <F1> <C-]>
     noremap <F2> :YcmCompleter GoTo<CR>
 endif
 
@@ -168,15 +170,104 @@ noremap <F4> <C-i>
 noremap <F5> g*
 nnoremap <F6> :YcmForceCompileAndDiagnostics<CR>
 
+""""""""""ctags""""""""""""
+set tags=tags;/
+
+""""""""""cscope""""""""""""
+
+"if has("cscope")  
+"    set csto=0  
+"    set cst  
+"    set csverb  
+"    set cspc=3  
+"    "add any database in current dir  
+"    if filereadable("GTAGS")  
+"        cs add GTAGS
+"    "else search cscope.out elsewhere  
+"    else  
+"       let cscope_file=findfile("GTAGS", ".;")  
+"       let cscope_pre=matchstr(cscope_file, ".*/")  
+"       if !empty(cscope_file) && filereadable(cscope_file)  
+"           exe "cs add" cscope_file cscope_pre  
+"       endif        
+"     endif  
+"endif  
+
+"using GNU GLOBAL
+set cscopeprg=gtags-cscope
+"let g:GtagsCscope_Auto_Load = 1
+"let g:GtagsCscope_Auto_Map = 1
+"let g:GtagsCscope_Absolute_Path = 1
+
+
+
+set csto=0  
+set csverb  
+set cst
+"set cscopequickfix=c-,d-,e-,g-,i-,s-,t-
+
+function! FindFiles(pat, ...)
+     let path = ''
+     for str in a:000
+         let path .= str . ','
+     endfor
+  
+     if path == ''
+         let path = &path
+     endif
+  
+     echo 'finding...'
+     redraw
+     call append(line('$'), split(globpath(path, a:pat), '\n'))
+     echo 'finding...done!'
+     redraw
+endfunc
+
+function! VimEnterCallback()
+     for f in argv()
+         "if fnamemodify(f, ':e') != 'c' && fnamemodify(f, ':e') != 'h' && fnamemodify(f, ':e') != 'java'
+             "continue
+         "endif
+  
+         call FindGtags(f)
+     endfor
+endfunc
+
+function! FindGtags(f)
+     let dir = fnamemodify(a:f, ':p:h')
+     while 1
+         let tmp = dir . '/GTAGS'
+         if filereadable(tmp)
+             set nocsverb
+             exe 'cs add ' . tmp . ' ' . dir . ' -a'
+             set csverb
+             break
+         elseif dir == '/'
+             break
+         endif
+  
+         let dir = fnamemodify(dir, ":h")
+     endwhile
+endfunc
+
+function! UpdateGtags(f)
+     let dir = fnamemodify(a:f, ':p:h')
+     exe 'silent !cd ' . dir . ' && global -u &> /dev/null &'
+endfunction
+au VimEnter * call VimEnterCallback()
+au BufAdd * call FindGtags(expand('<afile>'))
+au BufWritePost * call UpdateGtags(expand('<afile>'))
 
 """"""""""youcompleteme""""""""""""
 let g:ycm_complete_in_comments = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
+"let g:ycm_collect_identifiers_from_tags_files = 1 may crash if tags file very
+"huge
 let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
+set completeopt-=preview "do not dispaly preview
+"let g:ycm_add_preview_to_completeopt = 1
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_autoclose_preview_window_after_insertion = 1
 
 """"""""""syntastic""""""""""""
 "set error or warning signs
@@ -187,6 +278,8 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 "let g:syntastic_enable_balloons = 1
 
 """"""""""Ag""""""""""""
+let g:aghighlight=1
+let g:agprg="ag --column --smart-case"
 
 """"""""""ultisnips""""""""""""
 " make YCM compatible with UltiSnips (using supertab)
@@ -203,4 +296,38 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let delimitMate_expand_cr = 1
 
 
+""""""""""ctrlp""""""""""""
+" open in new tabpage
+"let g:ctrlp_prompt_mappings = {
+  "\ 'AcceptSelection("e")': ['<c-r>'],
+  "\ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
+  "\ }
+let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_max_depth = 40
+let g:ctrlp_max_files = 0
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(o|exe|so|dll)$',
+    \ }
 
+
+""""""""""ctrlp""""""""""""
+map ,, <Plug>(easymotion-prefix)
+
+nmap f <Plug>(easymotion-f)
+nmap F <Plug>(easymotion-F)
+nmap t <Plug>(easymotion-t)
+nmap T <Plug>(easymotion-T)
+nmap w <Plug>(easymotion-iskeyword-w)
+nmap W <Plug>(easymotion-W)
+nmap b <Plug>(easymotion-iskeyword-b)
+nmap B <Plug>(easymotion-B)
+nmap e <Plug>(easymotion-iskeyword-e)
+nmap E <Plug>(easymotion-E)
+nmap ge <Plug>(easymotion-iskeyword-ge)
+nmap gE <Plug>(easymotion-gE)
+"nmap j <Plug>(easymotion-j)
+"nmap k <Plug>(easymotion-k)
+"nmap n <Plug>(easymotion-n)
+"nmap N <Plug>(easymotion-N)
+nmap s <Plug>(easymotion-s)

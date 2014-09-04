@@ -26,6 +26,5 @@ fi
 
 # set cross-tool path
 PATH="$PATH:/opt/Sourcery_CodeBench_Lite_for_ARM_GNU_Linux/bin:/opt/p4v-2008.2.193639/bin"
-
 PATH="$PATH:/home/magee/Work/tools/bootimg"
 

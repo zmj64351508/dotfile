@@ -91,6 +91,7 @@ alias l='ls -CF'
 alias gvimt='gvim --remote-tab-silent'
 alias cctags='ctags --fields=+l --languages=c --exclude=.git --exclude=.svn -R'
 alias actags='ctags --fields=+l --languages=c:+java --exclude=.git --exclude=.svn -R'
+#alias make='colormake'
 # cd with history
 alias cd='pushd $1 > /dev/null'
 # cd to next history

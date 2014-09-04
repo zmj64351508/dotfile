@@ -18,6 +18,7 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'rking/ag.vim' 
 Bundle 'Raimondi/delimitMate'
 Bundle 'kien/ctrlp.vim'
+Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Lokaltog/vim-easymotion'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
@@ -303,6 +304,7 @@ let delimitMate_expand_cr = 1
   "\ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
   "\ }
 let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_depth = 40
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
@@ -310,6 +312,11 @@ let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(o|exe|so|dll)$',
     \ }
 
+let g:ctrlp_extensions = ['funky']
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+"nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_syntax_highlight = 1
 
 """"""""""ctrlp""""""""""""
 map ,, <Plug>(easymotion-prefix)

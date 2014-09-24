@@ -20,6 +20,7 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'rosenfeld/conque-term'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
@@ -64,7 +65,10 @@ set expandtab
 set showmatch
 set hlsearch
 set cursorline
-set lines=35 columns=118
+" do not set lines and columns in console
+if has("gui_running")
+    set lines=35 columns=118
+endif
 set number
 set nobackup
 set display=lastline "display last line when it can't be display completely
@@ -73,6 +77,7 @@ set wrap
 set foldmethod=syntax
 set foldcolumn=4
 set foldlevel=999
+set mouse=a
 set nomousehide
 
 set autochdir "auto change directory to the file dir
@@ -101,10 +106,26 @@ set incsearch "dispaly search result when searching
 " gui font
 set guifont=monospace\ 11
 
+set ttymouse=xterm
+
+if &term =~ "xterm"
+" 256 colors
+    let &t_Co = 256
+" restore screen after quitting
+    let &t_ti = "\<Esc>7\<Esc>[r\<Esc>[?47h"
+    let &t_te = "\<Esc>[?47l\<Esc>8"
+    if has("terminfo")
+        let &t_Sf = "\<Esc>[3%p1%dm"
+        let &t_Sb = "\<Esc>[4%p1%dm"
+    else
+        let &t_Sf = "\<Esc>[3%dm"
+        let &t_Sb = "\<Esc>[4%dm"
+    endif
+endif
+
 " show tab
 set showtabline=3
 function ShortTabLabel ()
-    let bufnrlist = tabpagebuflist (v:lnum)
     let bufnrlist = tabpagebuflist(v:lnum)
     let label = ''
 
@@ -121,6 +142,47 @@ function ShortTabLabel ()
     return filename
 endfunction
 set guitablabel=%{ShortTabLabel()}
+
+function MyTabLine()
+    let s = ''
+    for i in range(tabpagenr('$'))
+        " select the highlighting
+        if i + 1 == tabpagenr()
+            let s .= '%#TabLineSel#'
+        else
+            let s .= '%#TabLine#'
+        endif
+
+        " set the tab page number (for mouse clicks)
+        let s .= '%' . (i + 1) . 'T'
+
+        " the label is made by MyTabLabel()
+        let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+    endfor
+
+    " after the last tab fill with TabLineFill and reset tab page nr
+    let s .= '%#TabLineFill#%T'
+
+    " right-align the label to close the current tab page
+    if tabpagenr('$') > 1
+        let s .= '%=%#TabLine#%999Xclose'
+    endif
+
+    return s
+endfunction
+
+function MyTabLabel(n)
+    let label = ''
+    let buflist = tabpagebuflist(a:n)
+    let winnr = tabpagewinnr(a:n)
+    if getbufvar(winnr, "&modified")
+        let label = '+'
+    endif
+    let label .= bufname(buflist[winnr - 1])
+    let filename = fnamemodify (label, ':t')
+    return filename
+endfunction
+set tabline=%!MyTabLine()
 
 " c source file setting
 set cino=:0
@@ -141,7 +203,7 @@ if &diff
     set foldcolumn=1
 else
     noremap <F1> <C-]>
-    noremap <F2> :YcmCompleter GoTo<CR>
+    noremap <F2> :YcmCompleter GoTo<CR>zz
 endif
 
 " color
@@ -154,7 +216,7 @@ highlight DiffDelete guibg=lightBlue
 nmap j gj
 nmap k gk
 
-noremap <C-u> <C-u>zz
+noremap <C-d> <C-d>zz
 noremap <C-u> <C-u>zz
 noremap <C-left> :tabp<CR>
 noremap <C-right> :tabn<CR>
@@ -168,8 +230,23 @@ noremap <C-up> :tabnew<CR>
 nmap <A-.> :<up><CR>
 noremap <F3> <C-o>
 noremap <F4> <C-i>
-noremap <F5> g*
+noremap <F5> g*N
 nnoremap <F6> :YcmForceCompileAndDiagnostics<CR>
+" symbal
+nmap <Leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+" definition
+nmap <Leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+" calling references
+nmap <Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+"nmap <Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+"nmap <Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+"nmap <Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+"nmap <Leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+"nmap <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+nnoremap <Leader>f :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+"nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 """"""""""ctags""""""""""""
 set tags=tags;/
@@ -260,8 +337,11 @@ au BufAdd * call FindGtags(expand('<afile>'))
 au BufWritePost * call UpdateGtags(expand('<afile>'))
 
 """"""""""youcompleteme""""""""""""
-let g:ycm_complete_in_comments = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_enable_diagnostic_signs = 0
+let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_complete_in_comments = 0
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
 "let g:ycm_collect_identifiers_from_tags_files = 1 may crash if tags file very
 "huge
 let g:ycm_seed_identifiers_with_syntax = 1
@@ -313,9 +393,6 @@ let g:ctrlp_custom_ignore = {
     \ }
 
 let g:ctrlp_extensions = ['funky']
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-" narrow the list down with a word under cursor
-"nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
 
 """"""""""ctrlp""""""""""""

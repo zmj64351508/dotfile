@@ -89,6 +89,7 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias gvimt='gvim --remote-tab-silent'
+alias vimt='vim --remote-tab-silent'
 alias cctags='ctags --fields=+l --languages=c --exclude=.git --exclude=.svn -R'
 alias actags='ctags --fields=+l --languages=c:+java --exclude=.git --exclude=.svn -R'
 #alias make='colormake'
@@ -98,6 +99,8 @@ alias cd='pushd $1 > /dev/null'
 alias cdn='pushd -0 > /dev/null'
 # cd to previous history
 alias cdp='pushd +1 > /dev/null'
+
+alias eclipse='eclipse -vm /usr/lib/jvm/java-8-oracle/jre/bin/java'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

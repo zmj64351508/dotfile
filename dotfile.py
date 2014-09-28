@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import os
 import sys, getopt
+import sqlite3
 
 ################# Configurations #########################
 backup_files = (
@@ -12,6 +13,7 @@ backup_files = (
 
 linked_files = (
     {"target": "~/bin/make", "backup": "colormake.sh"}, # color make
+    {"target": "~/bin/deploy", "backup": "deploy.sh"},  # deploy
 )
 
 backup_dir = os.path.expanduser("~/backup")
@@ -71,6 +73,79 @@ def print_sub_cmds():
     print "    r, restore -- restore backup dir to system"
     print "    l, link    -- link files according to linked_files to system"
 
+class BackupFile(object):
+    def __init__(self, source):
+        self.source = source
+        self.backup = self.make_backup(self.source)
+
+    def make_backup(self, source):
+        backup = os.path.basename(source);
+        return backup
+
+class BackupFiles(object):
+    def __init__(self, db_dir):
+        self.db_dir = db_dir
+        self.db = open(self.db_dir, 'rw')
+        self.all_files = self.__get_all_files()
+
+    # return the list of all the backup files
+    def __get_all_files(self):
+        sources_list = []
+        sources = self.db.readlines()
+        for source in sources:
+            source = source.strip()
+            if source:
+                sources_list.append(BackupFile(source))
+        return sources_list
+    
+    def do_backup(self, backup_file):
+        cmd = cp + backup_file.source + " " + backup_dir + "/" + backup_file.backup
+        run_cmd(cmd)
+
+    def do_restore(self, backupfile):
+        # backup current file first
+        source_path = backupfile.source
+        if os.path.exists(source_path):
+            run_cmd(cp + source_path + " " + source_path + ".dotbak")
+
+        # do restore
+        if(os.path.exists(backup_dir + "/" + backupfile.backup)):
+            run_cmd(cp + backup_dir + "/" + backupfile.backup + " " + source_path)
+        else:
+            print "Can't find backup for " + backupfile.source
+
+    def do_all_restore(self):
+        for backupfile in self.all_files:
+            self.do_restore(backupfile)
+
+    def do_all_backup(self):
+        for backupfile in self.all_files:
+            self.do_backup(backupfile)
+
+class LinkedFiles(BackupFiles):
+
+    def do_backup(self, backup_file):
+        pass
+
+    def do_restore(self, backupfile):
+        source_path = os.path.expanduser(backupfile.source)
+        if os.path.exists(source_path) or os.path.islink(source_path):
+            run_cmd(mv + source_path + " " + source_path + ".dotbak")
+        # automaticly make dirs is not exsisted
+        source_parent = os.path.dirname(source_path)
+        if not os.path.isdir(source_parent):
+            os.makedirs(source_parent)
+        run_cmd(ln + linked_dir + "/" + backupfile.backup + " " + source_path)
+
+#if __name__ == "__main__":
+#    backupfiles = BackupFiles(backup_dir + "/" + "backupfiles")
+#    linkedfiles = LinkedFiles(backup_dir + "/" + "linkedfiles")
+#    
+#    #backupfiles.do_all_backup()
+#    backupfiles.do_all_restore()
+#    #linkedfiles.do_all_backup()
+#    #linkedfiles.do_all_restore()
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print_sub_cmds()
@@ -95,12 +170,15 @@ if __name__ == "__main__":
             print_usage()
             sys.exit()
 
+    backupfiles = BackupFiles(backup_dir + "/" + "backupfiles")
+    linkedfiles = LinkedFiles(backup_dir + "/" + "linkedfiles")
+
     if do_update:
-        update_backup()
+        backupfiles.do_all_backup()
 
     if do_restore:
-        restore()
+        backupfiles.do_all_restore()
 
     if do_link:
-        link()
+        linkedfiles.do_all_restore()
 

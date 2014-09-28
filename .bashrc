@@ -101,7 +101,7 @@ alias cdn='pushd -0 > /dev/null'
 alias cdp='pushd +1 > /dev/null'
 
 alias eclipse='eclipse -vm /usr/lib/jvm/java-8-oracle/jre/bin/java'
-
+alias openocd_elite1000='sudo openocd -f ~/openocd/openjtag.cfg -f ~/openocd/elite800.cfg.2taps.2cores'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

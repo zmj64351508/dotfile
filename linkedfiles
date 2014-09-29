@@ -1,2 +1,3 @@
-~/bin/make
-~/bin/deploy
+# this file lists all files should linked to system places 
+~/bin/make      colormake.sh    # colorful make
+~/bin/deploy    deploy.sh       # deploy file to usb device

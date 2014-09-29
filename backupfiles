@@ -1,4 +1,5 @@
+# this file lists all backup files ##
 ~/.profile
 ~/.bashrc
-~/.vimrc
+~/.vimrc #vimrc
 /usr/share/vim/vim74/syntax/c.vim

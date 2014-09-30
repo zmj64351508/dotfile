@@ -2,4 +2,3 @@
 ~/.profile
 ~/.bashrc
 ~/.vimrc #vimrc
-/usr/share/vim/vim74/syntax/c.vim

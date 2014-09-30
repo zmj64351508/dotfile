@@ -212,6 +212,17 @@ highlight DiffChange gui=None guibg=NONE
 highlight DiffText gui=None guibg=lightred
 highlight DiffDelete guibg=lightBlue
 
+autocmd FileType c call HighlightCfunction()
+autocmd FileType c++ call HighlightCfunction()
+autocmd FileType java call HighlightCfunction()
+function! HighlightCfunction()
+     " c function highlight
+     syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
+     syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
+     hi cFunction gui=Bold guifg=DarkBlue
+endfunc
+
+
 " some key map
 nmap j gj
 nmap k gk

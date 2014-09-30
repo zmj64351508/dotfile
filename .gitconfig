@@ -1,0 +1,12 @@
+[color]
+	ui = true
+[usr]
+[user]
+	email = MageeZhou@zhaoxin.com
+	name = MageeZhou
+[diff]
+	tool = gvimdiff
+[difftool]
+	prompt = Yes
+[review "http://10.3.254.142"]
+	username = mageezhou

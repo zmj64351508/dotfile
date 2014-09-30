@@ -136,10 +136,11 @@ if __name__ == "__main__":
         sys.exit()
 
     sub_cmd = sys.argv[1];
-    opts, args = getopt.getopt(sys.argv[2:], "hq", ["help", "quiet"])
+    opts, args = getopt.getopt(sys.argv[2:], "hqr", ["help", "quiet", "recursive"])
     do_update = False
     do_restore = False
     do_link = False
+    recursive = False
     for cmd in sub_cmd:
         if sub_cmd in ("u", "update"):
             do_update = True
@@ -163,6 +164,8 @@ if __name__ == "__main__":
             sys.exit()
         if op in ("-q", "--quiet"):
             quiet = True;
+        if op in ("-r", "--recursive"):
+            cp = cp + "-r "
 
     backupfiles = BackupFiles(backup_dir + "/" + "backupfiles")
     linkedfiles = LinkedFiles(backup_dir + "/" + "linkedfiles")

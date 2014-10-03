@@ -3,17 +3,24 @@ import os
 import sys, getopt
 
 ################# Configurations #########################
-backup_dir = os.path.expanduser("~/backup")
-linked_dir = backup_dir + "/" + "linked"
+backup_dir = ""
+linked_dir = ""
 cp = "cp -f "
 ln = "ln -s "
 mv = "mv "
 quiet = False
 ################# Script start ###########################
+def guess_backup_dir():
+    global backup_dir
+    if not backup_dir:
+        backup_dir = os.path.abspath(".")
+        linked_dir = backup_dir + "/" + "linked"
+
 def run_cmd(cmd):
+    global quiet
     if not quiet:
         print cmd
-    os.system(cmd)
+    #os.system(cmd)
 
 def print_common_opt_usage():
     print "    -h --help  -- display help"
@@ -167,6 +174,7 @@ if __name__ == "__main__":
         if op in ("-r", "--recursive"):
             cp = cp + "-r "
 
+    guess_backup_dir()
     backupfiles = BackupFiles(backup_dir + "/" + "backupfiles")
     linkedfiles = LinkedFiles(backup_dir + "/" + "linkedfiles")
 

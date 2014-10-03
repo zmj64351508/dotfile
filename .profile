@@ -10,6 +10,7 @@
 
 # swap esc and caps lock
 #xmodmap /home/magee/cap2esc
+setxkbmap -option caps:swapescape
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then

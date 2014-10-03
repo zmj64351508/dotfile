@@ -10,3 +10,5 @@
 	prompt = Yes
 [review "http://10.3.254.142"]
 	username = mageezhou
+[push]
+	default = matching

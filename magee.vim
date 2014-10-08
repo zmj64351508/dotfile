@@ -3,6 +3,10 @@
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
 " Last change:	2012 Jul 25
 
+" bail out if this isn't wanted (mrsvim.vim uses this).
+if exists("g:skip_loading_mswin") && g:skip_loading_mswin
+  finish
+endif
 
 " set the 'cpoptions' to its Vim default
 if 1	" only do this when compiled with expression evaluation
@@ -11,7 +15,7 @@ endif
 set cpo&vim
 
 " set 'selection', 'selectmode', 'mousemodel' and 'keymodel' for MS-Windows
-"behave mswin
+behave mswin
 
 " backspace and cursor keys wrap to previous/next line
 set backspace=indent,eol,start whichwrap+=<,>,[,]
@@ -26,7 +30,14 @@ vnoremap <S-Del> "+x
 " CTRL-C and CTRL-Insert are Copy
 vnoremap <C-C> "+y
 vnoremap <C-Insert> "+y
-vnoremap <C-V>		<C-R>+
+
+" CTRL-V and SHIFT-Insert are Paste
+inoremap <C-V>		"+gP
+vnoremap <C-V>		"+gP
+"map <S-Insert>		"+gP
+
+cmap <C-V>		<C-R>+
+cmap <S-Insert>		<C-R>+
 
 " Pasting blockwise and linewise selections is not possible in Insert and
 " Visual mode without the +virtualedit feature.  They are pasted as if they
@@ -37,8 +48,11 @@ vnoremap <C-V>		<C-R>+
 exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
 
-imap <S-Insert>		<C-V>
-vmap <S-Insert>		<C-V>
+"imap <S-Insert>		<C-V>
+"vmap <S-Insert>		<C-V>
+
+" Use CTRL-Q to do what CTRL-V used to do
+noremap <C-Q>		<C-V>
 
 " Use CTRL-S for saving, also in Insert mode
 noremap <C-S>		:update<CR>

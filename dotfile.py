@@ -20,7 +20,7 @@ def run_cmd(cmd):
     global quiet
     if not quiet:
         print cmd
-    #os.system(cmd)
+    os.system(cmd)
 
 def print_common_opt_usage():
     print "    -h --help  -- display help"

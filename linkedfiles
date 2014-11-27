@@ -1,3 +1,6 @@
 # this file lists all files should linked to system places 
 ~/bin/make      colormake.sh    # colorful make
 ~/bin/deploy    deploy.sh       # deploy file to usb device
+~/bin/remote_windows	remote_windows.sh # remote desktop to control windows
+~/bin/gvimt	gvim-remote-tab.sh
+~/bin/killgrep  killgrep.sh

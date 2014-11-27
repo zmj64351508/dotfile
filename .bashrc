@@ -88,7 +88,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias gvimt='gvim --remote-tab-silent'
+#alias gvimt='gvim --remote-tab-silent'
 alias vimt='vim --remote-tab-silent'
 alias cctags='ctags --fields=+l --languages=c --exclude=.git --exclude=.svn -R'
 alias actags='ctags --fields=+l --languages=c:+java --exclude=.git --exclude=.svn -R'

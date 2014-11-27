@@ -11,10 +11,13 @@ mv = "mv "
 quiet = False
 ################# Script start ###########################
 def guess_backup_dir():
-    global backup_dir
-    if not backup_dir:
-        backup_dir = os.path.abspath(".")
-        linked_dir = backup_dir + "/" + "linked"
+	global backup_dir
+	global linked_dir
+	if backup_dir == "":
+		backup_dir = os.path.abspath(".")
+		linked_dir = backup_dir + "/" + "linked"
+		print "backup_dir is " + backup_dir
+		print "linked_dir is " + linked_dir
 
 def run_cmd(cmd):
     global quiet

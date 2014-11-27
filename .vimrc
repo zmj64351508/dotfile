@@ -56,10 +56,10 @@ set autoindent
 "set smartindent
 
 " tab expand and width
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
+set tabstop=8
+set softtabstop=8
+set shiftwidth=8
+"set expandtab
 
 " display setting
 set showmatch
@@ -340,8 +340,22 @@ function! FindGtags(f)
 endfunc
 
 function! UpdateGtags(f)
-     let dir = fnamemodify(a:f, ':p:h')
-     exe 'silent !cd ' . dir . ' && global -u &> /dev/null &'
+	let dir = fnamemodify(a:f, ':p:h')
+	let fname = fnamemodify(a:f, ':p')
+	let found = 0
+	while 1
+		let tmp = dir . '/GTAGS'
+		if filereadable(tmp)
+			let found = 1
+			break
+		elseif dir == '/'
+			break
+		endif
+		let dir = fnamemodify(dir, ":h")
+	endwhile
+	if found == 1
+		exe 'silent !cd ' . dir . ' && gtags --single-update ' . fname . '&'
+	endif
 endfunction
 au VimEnter * call VimEnterCallback()
 au BufAdd * call FindGtags(expand('<afile>'))

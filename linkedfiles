@@ -4,3 +4,4 @@
 ~/bin/remote_windows	remote_windows.sh # remote desktop to control windows
 ~/bin/gvimt	gvim-remote-tab.sh
 ~/bin/killgrep  killgrep.sh
+~/bin/get_repo_root get_repo_root.sh

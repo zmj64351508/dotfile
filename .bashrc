@@ -99,6 +99,7 @@ alias cd='pushd $1 > /dev/null'
 alias cdn='pushd -0 > /dev/null'
 # cd to previous history
 alias cdp='pushd +1 > /dev/null'
+alias cgit='cd $(get_repo_root)'
 
 alias eclipse='eclipse -vm /usr/lib/jvm/java-8-oracle/jre/bin/java'
 alias openocd_elite1000='sudo openocd -f ~/openocd/openjtag.cfg -f ~/openocd/elite800.cfg.2taps.2cores'

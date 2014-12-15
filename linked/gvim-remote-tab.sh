@@ -1,40 +1,40 @@
 #!/bin/bash
 
-declare -a server_list
-unset server_list
-server_list=($(gvim --serverlist))
-server_num=${#server_list[@]}
+#declare -a server_list
+#unset server_list
+server_base_name=$(gvim --serverlist | sed -r -n -e "1s/(^[^0-9]+)([0-9]*)/\1/p")
+#server_num=${#server_list[@]}
 
-#if [[ $server_num -eq 1 ]]; then
-#	echo "yes"
-#	gvim --remote-tab-silent $@
-#else
-	echo "Avalible servers:"
-	# show avalible servers
-	#gvim --serverlist | sed '$a\New gvim' | sed "=" | sed -r -e "N;s/([^\n]+)\n(^)/\1: \2/" 
-	gvim --serverlist | sed '$a\New gvim' | awk '$0=""NR-1": "$0'
 
-	# validate input
-	while true; do
-		echo -n "Choose: "
-		read chosen
-		#new_server_index=`expr $server_num + 1`
-		if [[ $chosen -lt 0 || $chosen -gt $server_num ]]; then
-			echo "Invalid server number"
-		else
-			break
-		fi
-	done
+echo "Avalible servers:"
+# show avalible servers
+#gvim --serverlist | sed '$a\New gvim' | sed "=" | sed -r -e "N;s/([^\n]+)\n(^)/\1: \2/" 
+#gvim --serverlist | sort | sed '$a\n: New gvim' | awk '$0=""NR-1": "$0'
+gvim --serverlist | sort | sed -e "s/^.*[^0-9]$/0: \0/" -e '$a\n: New gvim' | sed -r -e "s/^.*([0-9]+)$/\1: \0/"
 
-	# new gvim server
-	if [[ $chosen -eq $server_num ]]; then
-		gvim $@
+new_server=false
+# validate input
+while true; do
+	echo -n "Choose: "
+	read chosen
+	#new_server_index=`expr $server_num + 1`
+	if [ $chosen = 'n' ]; then
+		new_server=true
+		break;
+	elif [[ $chosen -lt 0 ]]; then
+		echo "Invalid server number"
 	else
-	# attach to server
-		server=${server_list[chosen]}
-		gvim --servername $server --remote-tab-silent $@
+		server_index=$chosen
+		break
 	fi
-#fi
+done
 
+# new gvim server
+if [[ $new_server = true ]]; then
+	gvim $@
+else
+	# attach to server
+	server=${server_base_name}${server_index}
+	gvim --servername $server --remote-tab-silent $@
+fi
 
-#echo $server_num

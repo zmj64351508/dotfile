@@ -6,3 +6,4 @@
 ~/bin/killgrep  killgrep.sh
 ~/bin/get_repo_root get_repo_root.sh
 ~/bin/make_gtags make_gtags.sh
+~/bin/git_cherrypick_other git-pick-other.sh

@@ -25,6 +25,9 @@ while true; do
 		echo "Invalid server number"
 	else
 		server_index=$chosen
+		if [ $server_index = '0' ]; then
+			server_index=''
+		fi
 		break
 	fi
 done

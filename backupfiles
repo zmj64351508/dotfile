@@ -4,3 +4,4 @@
 ~/.vimrc #vimrc
 ~/.vim/magee.vim
 ~/.gitconfig
+/etc/samba/smb.conf

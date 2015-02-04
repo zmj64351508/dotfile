@@ -15,12 +15,12 @@ Bundle 'gmarik/Vundle.vim'
 " plugin on GitHub repo
 Bundle 'Valloric/YouCompleteMe'
 "Bundle 'Syntastic'
-Bundle 'rking/ag.vim' 
+"Bundle 'rking/ag.vim' 
 Bundle 'Raimondi/delimitMate'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'rosenfeld/conque-term'
+"Bundle 'rosenfeld/conque-term'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
@@ -53,13 +53,14 @@ set nocompatible
 
 " indent
 set autoindent
+"filetype plugin off
 "set smartindent
 
 " tab expand and width
 set tabstop=8
-set softtabstop=8
-set shiftwidth=8
-"set expandtab
+"set softtabstop=8
+"set shiftwidth=8
+set noexpandtab
 
 " display setting
 set showmatch

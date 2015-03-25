@@ -20,6 +20,9 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Lokaltog/vim-easymotion'
+
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 "Bundle 'rosenfeld/conque-term'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
@@ -51,6 +54,9 @@ syntax on
 filetype on
 set nocompatible
 
+" automatically read file when changed
+set autoread
+
 " indent
 set autoindent
 "filetype plugin off
@@ -69,6 +75,7 @@ set cursorline
 " do not set lines and columns in console
 if has("gui_running")
     set lines=35 columns=118
+    set guioptions-=T
 endif
 set number
 set nobackup
@@ -188,6 +195,15 @@ set tabline=%!MyTabLine()
 " c source file setting
 set cino=:0
 
+function OpenDefinationInTab(word)
+	tabnew
+	try
+		exec 'cs find g ' . a:word
+	catch /^Vim\%((\a\+)\)\=:E259/
+		tabc
+	endtry
+endfunction
+
 " diff specific setting
 function SplitCenter()
     set noequalalways
@@ -204,7 +220,8 @@ if &diff
     set foldcolumn=1
 else
     noremap <F1> <C-]>
-    noremap <F2> :YcmCompleter GoTo<CR>zz
+    noremap <F2> :call OpenDefinationInTab(expand("<cword>"))<cr>
+    " noremap <F2> :YcmCompleter GoTo<CR>zz
 endif
 
 " color
@@ -441,3 +458,11 @@ nmap gE <Plug>(easymotion-gE)
 "nmap n <Plug>(easymotion-n)
 "nmap N <Plug>(easymotion-N)
 nmap s <Plug>(easymotion-s)
+
+function UpdateAddress(start, end, step)
+	for curline in range(a:start, a:end)
+		let content = getline(curline)
+		let content = printf("%s\t// 0x%x", content, (curline - a:start)*a:step)
+		call setline(curline, content)
+	endfor
+endfunction

@@ -6,7 +6,7 @@ usage()
 {
 	echo "usage: $script [-a] language1 language2 ..."
 	echo "  -a	append to gtags.files, otherwise create a new"
-	echo "  language can be c,cpp"
+	echo "  language can be c,s,cpp"
 }
 
 append=false
@@ -46,6 +46,12 @@ for lan in ${languages[@]}; do
 				file+=' -o '
 			fi
 			file+=' -name "*.[hc]pp" -o -name "*.cc" '
+			;;
+		"s")
+			if [[ $file != '' ]]; then
+				file+=' -o '
+			fi
+			file+=' -name "*.[sS]" '
 			;;
 		*)
 			usage

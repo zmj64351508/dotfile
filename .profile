@@ -28,3 +28,9 @@ fi
 PATH="$PATH:/opt/Sourcery_CodeBench_Lite_for_ARM_GNU_Linux/bin:/opt/p4v-2008.2.193639/bin"
 PATH="$PATH:/home/magee/Work/tools/bootimg"
 
+# setup perfoce command-line tool
+export P4PASSWD=shglx
+export P4CLIENT=magee
+export P4USER=SH_GL_LINUX
+export P4PORT=scm-shanghai:2666
+

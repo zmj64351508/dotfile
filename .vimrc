@@ -14,6 +14,7 @@ Bundle 'gmarik/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'rdnetto/YCM-Generator'
 "Bundle 'Syntastic'
 "Bundle 'rking/ag.vim' 
 Bundle 'Raimondi/delimitMate'
@@ -83,7 +84,7 @@ set display=lastline "display last line when it can't be display completely
 set nolinebreak      "can break a word at the end of the line
 set wrap
 set foldmethod=syntax
-set foldcolumn=4
+set foldcolumn=1
 set foldlevel=999
 set mouse=a
 set nomousehide
@@ -130,6 +131,8 @@ if &term =~ "xterm"
         let &t_Sb = "\<Esc>[4%dm"
     endif
 endif
+
+colorscheme term_wombat
 
 " show tab
 set showtabline=3
@@ -224,12 +227,6 @@ else
     " noremap <F2> :YcmCompleter GoTo<CR>zz
 endif
 
-" color
-highlight CursorLine cterm=None ctermbg=None 
-highlight DiffChange gui=None guibg=NONE
-highlight DiffText gui=None guibg=lightred
-highlight DiffDelete guibg=lightBlue
-
 autocmd FileType c call HighlightCfunction()
 autocmd FileType c++ call HighlightCfunction()
 autocmd FileType java call HighlightCfunction()
@@ -237,9 +234,8 @@ function! HighlightCfunction()
      " c function highlight
      syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
      syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
-     hi cFunction gui=Bold guifg=DarkBlue
+     hi def link cFunction		Function
 endfunc
-
 
 " some key map
 nmap j gj
@@ -256,6 +252,7 @@ noremap <C-l> :tabn<CR>
 noremap <C-j> :tabm -1<CR>
 noremap <C-k> :tabm +1<CR>
 noremap <C-up> :tabnew<CR>
+noremap <C-e> :tabnew<CR>
 nmap <A-.> :<up><CR>
 noremap <F3> <C-o>
 noremap <F4> <C-i>
@@ -336,18 +333,17 @@ function! VimEnterCallback()
              "continue
          "endif
   
-         call FindGtags(f)
+         call LoadGtags(f)
      endfor
 endfunc
 
 function! FindGtags(f)
+     let gtags = ""
      let dir = fnamemodify(a:f, ':p:h')
      while 1
          let tmp = dir . '/GTAGS'
          if filereadable(tmp)
-             set nocsverb
-             exe 'cs add ' . tmp . ' ' . dir . ' -a'
-             set csverb
+             let gtags = tmp
              break
          elseif dir == '/'
              break
@@ -355,6 +351,14 @@ function! FindGtags(f)
   
          let dir = fnamemodify(dir, ":h")
      endwhile
+     return gtags
+endfunc
+
+function! LoadGtags(f)
+     let gtags = FindGtags(a:f)
+     set nocsverb
+     exec 'cs add ' . gtags . ' ' . '.' . ' -a'
+     set csverb
 endfunc
 
 function! UpdateGtags(f)
@@ -376,7 +380,7 @@ function! UpdateGtags(f)
 	endif
 endfunction
 au VimEnter * call VimEnterCallback()
-au BufAdd * call FindGtags(expand('<afile>'))
+au BufEnter * call LoadGtags(expand('<afile>'))
 au BufWritePost * call UpdateGtags(expand('<afile>'))
 
 """"""""""youcompleteme""""""""""""

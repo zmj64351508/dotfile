@@ -3,5 +3,8 @@
 ~/.bashrc
 ~/.vimrc #vimrc
 ~/.vim/magee.vim
+~/.vim/colors/wombat.vim
+~/.vim/colors/term_wombat.vim
+~/.vim/colors/light.vim
 ~/.gitconfig
 /etc/samba/smb.conf

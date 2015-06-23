@@ -17,6 +17,7 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'rdnetto/YCM-Generator'
 "Bundle 'Syntastic'
 "Bundle 'rking/ag.vim' 
+Bundle 'dyng/ctrlsf.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
@@ -462,6 +463,20 @@ nmap gE <Plug>(easymotion-gE)
 "nmap n <Plug>(easymotion-n)
 "nmap N <Plug>(easymotion-N)
 nmap s <Plug>(easymotion-s)
+
+"""""""""""""ctrlsf"""""""""""""""""
+let g:ctrlsf_auto_close = 0
+let g:ctrlsf_regex_pattern = 1
+let g:ctrlsf_default_root = 'project'
+nmap     <C-F> <Esc>
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>F <Plug>CtrlSFVwordPath
+vmap     <C-F>f <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 
 function UpdateAddress(start, end, step)
 	for curline in range(a:start, a:end)

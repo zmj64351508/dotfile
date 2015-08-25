@@ -25,7 +25,7 @@ Bundle 'Lokaltog/vim-easymotion'
 
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
-"Bundle 'rosenfeld/conque-term'
+Bundle 'rosenfeld/conque-term'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:

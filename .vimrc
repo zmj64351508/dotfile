@@ -26,6 +26,8 @@ Bundle 'Lokaltog/vim-easymotion'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Bundle 'rosenfeld/conque-term'
+Plugin 'zmj64351508/Tabmerge'
+Bundle 'vim-scripts/Tagbar'
 " Track the engine.
 "Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
@@ -89,6 +91,7 @@ set foldcolumn=1
 set foldlevel=999
 set mouse=a
 set nomousehide
+set winaltkeys=no
 
 set autochdir "auto change directory to the file dir
 set incsearch "dispaly search result when searching
@@ -208,6 +211,8 @@ function OpenDefinationInTab(word)
 	endtry
 endfunction
 
+command Buffer2tab tabnew % | tabpre | q! | tabnext
+
 " diff specific setting
 function SplitCenter()
     set noequalalways
@@ -244,6 +249,8 @@ nmap k gk
 
 noremap <C-d> <C-d>zz
 noremap <C-u> <C-u>zz
+
+" tab movement
 noremap <C-left> :tabp<CR>
 noremap <C-right> :tabn<CR>
 noremap <C-S-left> :tabm -1<CR>
@@ -254,6 +261,27 @@ noremap <C-j> :tabm -1<CR>
 noremap <C-k> :tabm +1<CR>
 noremap <C-up> :tabnew<CR>
 noremap <C-e> :tabnew<CR>
+noremap <A-1> 1gt
+noremap <A-2> 2gt
+noremap <A-3> 3gt
+noremap <A-4> 4gt
+noremap <A-5> 5gt
+noremap <A-6> 6gt
+noremap <A-7> 7gt
+noremap <A-8> 8gt
+noremap <A-9> 9gt
+
+" split buffer switch
+map <a-w>  <c-w>
+map <a-l> <c-w>l
+map <a-k> <c-w>k
+map <a-j> <c-w>j
+map <a-h> <c-w>h
+imap <a-l> <esc><c-w>li
+imap <a-k> <esc><c-w>ki
+imap <a-j> <esc><c-w>ji
+imap <a-h> <esc><c-w>hi
+
 nmap <A-.> :<up><CR>
 noremap <F3> <C-o>
 noremap <F4> <C-i>
@@ -485,3 +513,6 @@ function UpdateAddress(start, end, step)
 		call setline(curline, content)
 	endfor
 endfunction
+
+"""""""""""""tabmerge"""""""""""""""""
+let g:tabmerge_location = 'left'

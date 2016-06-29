@@ -32,5 +32,5 @@ PATH="$PATH:/home/magee/Work/tools/bootimg"
 export P4PASSWD=shglx
 export P4CLIENT=magee
 export P4USER=SH_GL_LINUX
-export P4PORT=scm-shanghai:2666
+export P4PORT=10.28.251.101:2666
 

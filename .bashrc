@@ -126,3 +126,5 @@ fi
 # custom the prompt of bash
 PS1='\[\e]0;\w\a\]${debian_chroot:+($debian_chroot)}\[\e[1;33m\]\u@\h:\[\e[0m\]\w\[\e[0;32m\]$(__git_ps1 "(%s)")\[\e[0m\]\$ '
 
+export EDITOR=/usr/bin/vim
+

@@ -242,7 +242,7 @@ function! HighlightCfunction()
      syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
      hi def link cFunction		Function
 endfunc
-
+autocmd FileType python setlocal noexpandtab sta sw=8 sts=8
 " some key map
 nmap j gj
 nmap k gk
